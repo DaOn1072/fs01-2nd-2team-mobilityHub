@@ -1,0 +1,165 @@
+.main-page {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  gap: 1.5rem;
+}
+
+/* 현재 작업정보 */
+.current-work-conatiner {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+/* 상단표시 - 집계 박스 */
+.working-box {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+}
+
+/* 글자-아이콘 간격설정 */
+.between-position {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.working-info {
+  color: #6b7280;
+}
+
+.info-details {
+  color: #111827;
+  margin-top: 0.5rem;
+}
+
+.icon-box {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.usage-status-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.use-status-box {
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+}
+
+.h3-tag {
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  color: #111827;
+}
+
+.status-box {
+  padding: 1rem;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.checklist-stock-container {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.checklist-container {
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+}
+
+.checklist-box {
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.checklist-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+h3.checklist-header {
+  color: #111827;
+}
+
+.stockStatus-container {
+  grid-column: span 2 / span 2;
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+  border: 1px solid black;
+}
+
+.stockStatus-box {
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.stockStatus-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.stockStatus-header h3 {
+  color: #111827;
+}
+
+.outOfStock {
+  color: #6b7280;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+table.stockStatus-table {
+  width: 100%;
+}
+
+.stockStatus-table thead {
+  background-color: #f9fafb;
+}
+
+th.stock-category {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  color: #374151;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.stockStatus-table tbody > * + * {
+  border-top: 1px solid #e5e7eb;
+}
+
+.insert {
+  background-color: green;
+  color: white;
+}
