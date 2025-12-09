@@ -1,5 +1,5 @@
 import React from "react";
-import "../css/MaintenanceSection.css";
+import "../style/MaintenanceSection.css";
 
 const MaintenanceSection = () => {
   return (
@@ -56,9 +56,7 @@ const MaintenanceSection = () => {
           <div className="h3-tag">
             <h3>이용 현황</h3>
           </div>
-          <div className="status-box insert">
-            {/* 이용 차량 .map 이용해서 추가 */}
-          </div>
+          <div className="status-box insert">{/* 이용 차량 .map 이용해서 추가 */}</div>
         </div>
       </div>
 
