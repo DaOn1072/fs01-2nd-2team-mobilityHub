@@ -1,4 +1,4 @@
-package com.iot2ndproject.mobilityhub.mobility_hub_backend;
+package com.iot2ndproject.mobilityhub;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
