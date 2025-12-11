@@ -35,8 +35,8 @@ public class StockStatusEntity {
     private LocalDateTime updateTime; // 업데이트 날짜
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "parkingLot")
-    private ParkingEntity parkingLot;
+    @JoinColumn(name = "sectorId")
+    private ParkingEntity sectorId;
 
     // 재고 수량 변동시 <- 필요없으면 삭제 또는 변경
     public StockStatusEntity(String inventoryId, int stockQantity){
