@@ -5,7 +5,9 @@ import com.iot2ndproject.mobilityhub.domain.user.dto.UserRequestDTO;
 import com.iot2ndproject.mobilityhub.domain.user.dto.UserResponseDTO;
 import com.iot2ndproject.mobilityhub.domain.user.jwt.TokenProvider;
 import com.iot2ndproject.mobilityhub.domain.user.service.UserService;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-
 @RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
