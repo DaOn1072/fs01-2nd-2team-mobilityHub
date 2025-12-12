@@ -227,13 +227,17 @@ export function ServiceProgress({ isLogin }) {
               서비스: {progress.services?.map((s) => SERVICE_NAMES[s] || s).join(", ")}
             </div>
             <div style={{ marginBottom: "4px" }}>
-              주차 상태: {progress.parkingStatus || (progress.services?.includes("parking") ? "대기" : "-")}
+              주차 상태:{" "}
+              {progress.parkingStatus || (progress.services?.includes("parking") ? "대기" : "-")}
             </div>
             <div style={{ marginBottom: "4px" }}>
-              세차 상태: {progress.carwashStatus || (progress.services?.includes("carwash") ? "대기" : "-")}
+              세차 상태:{" "}
+              {progress.carwashStatus || (progress.services?.includes("carwash") ? "대기" : "-")}
             </div>
             <div style={{ marginBottom: "4px" }}>
-              정비 상태: {progress.maintenanceStatus || (progress.services?.includes("maintenance") ? "대기" : "-")}
+              정비 상태:{" "}
+              {progress.maintenanceStatus ||
+                (progress.services?.includes("maintenance") ? "대기" : "-")}
             </div>
             <div style={{ fontSize: "12px", color: "#6b7280" }}>
               요청 시각: {(progress.createdAt || "").replace("T", " ").slice(0, 19)}

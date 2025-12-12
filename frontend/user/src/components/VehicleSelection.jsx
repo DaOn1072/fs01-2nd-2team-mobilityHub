@@ -155,7 +155,9 @@ export default function VehicleSelection({ isLogin }) {
                 </div>
 
                 <button
-                  onClick={() => navigate("/service", { state: { selectedVehicle: vehicle.plateNumber } })}
+                  onClick={() =>
+                    navigate("/service", { state: { selectedVehicle: vehicle.plateNumber } })
+                  }
                   style={{
                     padding: "6px 16px",
                     backgroundColor: "#3b82f6",

@@ -11,4 +11,3 @@ export const addUserCar = async ({ userId, carNumber, carModel }) => {
   const response = await jwtAxios.post(requests.carSave, payload);
   return response.data;
 };
-

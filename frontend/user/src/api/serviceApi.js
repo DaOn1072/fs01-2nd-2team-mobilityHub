@@ -23,4 +23,3 @@ export const updateServiceStatus = async ({ id, status, service }) => {
   });
   return response.data;
 };
-
