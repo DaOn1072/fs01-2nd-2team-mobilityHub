@@ -47,14 +47,12 @@ public class CarWashServiceImpl implements CarWashService {
         List<WorkInfoEntity> list = dao.carWashing();
 
         return list.stream()
-                // work_type이 "carwash" 뿐 아니라 "park,carwash" 같은 복합 타입도 세차로 처리
-                .filter(w -> w.getWork() != null
-                        && w.getWork().getWorkType() != null
-                        && java.util.Arrays.stream(w.getWork().getWorkType().split(","))
-                        .map(String::trim)
-                        .filter(s -> !s.isBlank())
-                        .anyMatch(s -> s.equalsIgnoreCase("carwash")))
-                .filter(w -> w.getRequestTime().toLocalDate().isEqual(LocalDate.now()))
+                .filter(entity -> entity.getWork().getWorkId() == 3 || entity.getWork().getWorkId() == 4)
+                .filter(entity -> entity.getRequestTime().toLocalDate().isEqual(LocalDate.now()) && entity.getExitTime() == null)
+//                .filter(w -> w.getWork() != null
+//                && w.getWork().getWorkType() != null
+//                && w.getWork().getWorkType().equalsIgnoreCase("carwash"))
+//                .filter(w -> w.getRequestTime().toLocalDate().isEqual(LocalDate.now()))
                 .map(w -> {
                     WashResponse dto = modelMapper.map(w, WashResponse.class);
                     if(w.getUserCar().getCar() != null){
