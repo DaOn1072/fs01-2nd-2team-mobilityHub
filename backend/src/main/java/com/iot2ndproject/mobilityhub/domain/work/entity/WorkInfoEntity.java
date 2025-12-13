@@ -10,8 +10,8 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import com.iot2ndproject.mobilityhub.domain.image.entity.ImageEntity;
 import com.iot2ndproject.mobilityhub.domain.parking.entity.ParkingEntity;
+import com.iot2ndproject.mobilityhub.domain.vehicle.entity.CarEntity;
 import com.iot2ndproject.mobilityhub.domain.vehicle.entity.UserCarEntity;
-
 import java.time.LocalDateTime;
 
 @Entity
