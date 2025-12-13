@@ -19,13 +19,18 @@ public class StockStatusResponse {
     private String stockCategory;
     private int stockQuantity;
     private LocalDateTime updateTime;
-    private ParkingEntity sectorId;
+    private String sectorId;
 
-    public StockStatusResponse(StockStatusEntity stockStatusEntity) {
-        this.inventoryId = stockStatusEntity.getInventoryId();
-        this.productName = stockStatusEntity.getProductName();
-        this.stockCategory = stockStatusEntity.getStockCategory();
-        this.stockQuantity = stockStatusEntity.getStockQuantity();
-        this.updateTime = stockStatusEntity.getUpdateTime();
+    public StockStatusResponse(StockStatusEntity entity) {
+        this.inventoryId = entity.getInventoryId();
+        this.productName = entity.getProductName();
+        this.stockCategory = entity.getStockCategory();
+        this.stockQuantity = entity.getStockQuantity();
+        this.updateTime = entity.getUpdateTime();
+
+        // 연관 엔티티 → 값만 추출
+        if (entity.getSectorId() != null) {
+            this.sectorId = entity.getSectorId().getSectorId();
+        }
     }
 }

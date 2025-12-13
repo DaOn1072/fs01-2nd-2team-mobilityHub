@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 public interface StockStatusRepository extends JpaRepository<StockStatusEntity, String> {
 
-    StockStatusEntity findByInventoryId(@RequestParam("inventoryId") String inventoryId);
+    StockStatusEntity findByInventoryId(String inventoryId);
 
-    void deleteByInventoryId(@RequestParam("inventoryId") String inventoryId);
+    void deleteByInventoryId(String inventoryId);
 }
