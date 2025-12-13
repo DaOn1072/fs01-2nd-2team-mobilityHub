@@ -35,7 +35,4 @@ public class ParkingEntity {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "admin_id")
     private AdminEntity admin; // 관리자ID(fk)
-
-    @OneToMany(mappedBy = "sectorId")
-    List<StockStatusEntity> stockStatus = new ArrayList<>();
 }
