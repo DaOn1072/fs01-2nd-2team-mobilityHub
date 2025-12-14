@@ -13,6 +13,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/repair")
+@CrossOrigin(origins = "http://localhost:5173")
 @RequiredArgsConstructor
 public class RepairController {
     private final RepairService repairService;
@@ -58,10 +59,10 @@ public class RepairController {
 
     // 재고 이름/유형/수량/가격 변경
     @PostMapping("/detail/update")
-        public ResponseEntity<?> updateStock(@RequestParam("inventoryId") String inventoryId, @RequestBody StockUpdateRequest request) {
-        repairService.updateStockStatus(inventoryId, request);
+        public ResponseEntity<?> updateStock(@RequestBody StockUpdateRequest request) {
+        repairService.updateStockStatus(request);
 
-        return ResponseEntity.ok(inventoryId+"의 내용이 변경되었습니다.");
+        return ResponseEntity.ok("재고수정 완료");
     }
 
     // 재고 삭제
@@ -69,20 +70,6 @@ public class RepairController {
     public ResponseEntity<?> deleteStock(@RequestParam(name = "inventoryId") String inventoryId) {
         repairService.deleteStock(inventoryId);
         return ResponseEntity.ok("재고가 삭제되었습니다.");
-    }
-
-    // 재고 수량 변경
-    @PostMapping("/detail/quantity")
-    public ResponseEntity<?> updateQuantity(@RequestParam(name = "inventoryId") String inventoryId, @RequestParam("quantity") int quantity) {
-        repairService.updateStockQuantity(inventoryId, quantity);
-        return ResponseEntity.ok(HttpStatus.OK);
-    }
-
-    // 재고 이름,유형,수량,가격 변경
-    @PutMapping("/detail/update")
-    public ResponseEntity<?> updateStockInfo(@RequestParam(name = "inventoryId") String inventoryId, @RequestBody StockUpdateRequest updateRequest) {
-        repairService.updateStockStatus(inventoryId, updateRequest);
-        return ResponseEntity.ok(HttpStatus.OK);
     }
 
     // 보고서 전체 조회
@@ -106,9 +93,9 @@ public class RepairController {
 
     // 보고서 수정
     @PostMapping("/report/update")
-    public ResponseEntity<?> updateReport(@RequestParam(name = "reportId") String reportId, @RequestBody ReportRequestDTO reportRequestDTO){
-        repairService.updateReport(reportId, reportRequestDTO);
-        return ResponseEntity.ok(reportId+"보고서가 수정되었습니다.");
+    public ResponseEntity<?> updateReport(@RequestBody ReportRequestDTO reportRequestDTO){
+        repairService.updateReport(reportRequestDTO);
+        return ResponseEntity.ok("보고서가 수정되었습니다.");
     }
 
     // 보고서 삭제

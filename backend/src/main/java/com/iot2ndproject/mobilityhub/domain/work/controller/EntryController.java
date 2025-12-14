@@ -6,6 +6,7 @@ import com.iot2ndproject.mobilityhub.domain.work.entity.WorkInfoEntity;
 import com.iot2ndproject.mobilityhub.domain.work.service.EntryService;
 import com.iot2ndproject.mobilityhub.domain.work.service.WorkInfoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,4 +29,5 @@ public class EntryController {
     public List<WorkInfoResponseDTO> todayEntry() {
         return workInfoService.getTodayEntryDTO();
     }
+
 }
