@@ -1,7 +1,7 @@
 package com.iot2ndproject.mobilityhub.domain.image.repository;
 
 import com.iot2ndproject.mobilityhub.domain.image.entity.ImageEntity;
-import com.iot2ndproject.mobilityhub.domain.work.entity.WorkInfoEntity;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

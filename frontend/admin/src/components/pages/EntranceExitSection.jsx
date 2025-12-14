@@ -1,32 +1,18 @@
 import "../style/EntranceExitSection.css";
 import { useEffect, useState } from "react";
 import LicenseModal from "./LicenseModal";
-
-import {
-  getTodayEntry,
-  getTodayExit,
-  getLatestEntrance,
-  approveEntrance,
-} from "../../api/EntranceAPI";
+import { getTodayEntry, getTodayExit } from "../../api/EntranceAPI";
 
 export default function EntranceExitSection() {
   const [entryList, setEntryList] = useState([]);
   const [exitList, setExitList] = useState([]);
-  const [latest, setLatest] = useState(null);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [selected, setSelected] = useState(null);
 
-  /** 🔄 전체 로딩 */
   const loadAll = async () => {
     try {
-      const [entry, exit, latestRes] = await Promise.all([
-        getTodayEntry(),
-        getTodayExit(),
-        getLatestEntrance(),
-      ]);
-
+      const [entry, exit] = await Promise.all([getTodayEntry(), getTodayExit()]);
       setEntryList(entry);
       setExitList(exit);
-      setLatest(latestRes);
     } catch (e) {
       console.error("입출차 데이터 로딩 실패", e);
     }
@@ -36,84 +22,46 @@ export default function EntranceExitSection() {
     loadAll();
   }, []);
 
-  /** ✅ 입차 승인 */
-  const handleApprove = async () => {
-    if (!latest) return;
-
-    await approveEntrance(latest.workId);
-    await loadAll();
-  };
-
   return (
-    <div className="section-container">
-      {/* ===== 상단 요약 ===== */}
-      <div className="summary-grid">
-        <div className="summary-card">
-          <p className="summary-title">금일 입차</p>
-          <p className="summary-value">{entryList.length}대</p>
-        </div>
-        <div className="summary-card">
-          <p className="summary-title">금일 출차</p>
-          <p className="summary-value">{exitList.length}대</p>
-        </div>
+    <div className="entrance-page">
+      {/* ================= 헤더 ================= */}
+      <div className="page-header">
+        <h2>구역 관리: 입출구</h2>
+        <p>실시간 모니터링 및 관리</p>
       </div>
 
-      {/* ===== CCTV + 최근 인식 번호판 ===== */}
-      <div className="camera-section">
-        <div className="camera-stream-box">
-          <img src="http://192.168.14.124/stream" alt="입구 CCTV" className="cctv-stream" />
+      {/* ================= CCTV + 최근 인식 ================= */}
+      <div className="top-grid">
+        {/* CCTV */}
+        <div className="card cctv-card">
+          <h4>입구 CCTV</h4>
+          <div className="cctv-box">
+            <img
+              src="http://192.168.14.124:8080/stream"
+              alt="입구 CCTV"
+              className="cctv-stream"
+              onError={(e) => (e.target.style.display = "none")}
+            />
+            <div className="cctv-placeholder">카메라 연결 대기중</div>
+          </div>
         </div>
 
-        <div className="latest-plate-box">
+        {/* 최근 인식 */}
+        <div className="card recent-card">
           <h4>최근 인식 번호판</h4>
-
-          {!latest ? (
-            <p>아직 인식된 차량 없음</p>
-          ) : (
-            <>
-              <img src={latest.imagePath} className="plate-image" />
-
-              <p>
-                OCR 번호: <strong>{latest.ocrNumber || "-"}</strong>
-              </p>
-              <p>
-                수정 번호: <strong>{latest.correctedOcrNumber || "-"}</strong>
-              </p>
-              <p>
-                등록 차량: <strong>{latest.registeredCarNumber || "미등록"}</strong>
-              </p>
-
-              {/* 🔥 일치 여부 */}
-              <div className="match-row">
-                {latest.match ? (
-                  <span className="badge-match">일치</span>
-                ) : (
-                  <span className="badge-mismatch">불일치</span>
-                )}
-              </div>
-
-              {/* 🔘 버튼 영역 */}
-              <div className="action-row">
-                {!latest.match && (
-                  <button className="btn-edit" onClick={() => setModalOpen(true)}>
-                    번호판 수정
-                  </button>
-                )}
-
-                <button className="btn-approve" disabled={!latest.match} onClick={handleApprove}>
-                  입차 승인
-                </button>
-              </div>
-            </>
-          )}
+          <p className="empty-text">아직 인식된 차량 없음</p>
+          <button className="btn-edit" disabled>
+            수정
+          </button>
         </div>
       </div>
 
-      {/* ===== 입차 / 출차 기록 ===== */}
-      <div className="table-grid">
-        <div className="table-card">
-          <h3>입차 차량 기록</h3>
-          <table className="record-table">
+      {/* ================= 입차 / 출차 ================= */}
+      <div className="bottom-grid">
+        {/* 입차 */}
+        <div className="card table-card">
+          <h4>입차 차량 기록</h4>
+          <table>
             <thead>
               <tr>
                 <th>차량번호</th>
@@ -122,20 +70,28 @@ export default function EntranceExitSection() {
               </tr>
             </thead>
             <tbody>
+              {entryList.length === 0 && (
+                <tr>
+                  <td colSpan={3} className="empty-row">
+                    데이터 없음
+                  </td>
+                </tr>
+              )}
               {entryList.map((e) => (
-                <tr key={e.id}>
+                <tr key={e.id} onClick={() => setSelected(e)}>
                   <td>{e.carNumber}</td>
-                  <td>{e.entryTime}</td>
-                  <td>{e.carState}</td>
+                  <td>{format(e.entryTime)}</td>
+                  <td>입차</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
 
-        <div className="table-card">
-          <h3>출차 차량 기록</h3>
-          <table className="record-table">
+        {/* 출차 */}
+        <div className="card table-card">
+          <h4>출차 차량 기록</h4>
+          <table>
             <thead>
               <tr>
                 <th>차량번호</th>
@@ -144,11 +100,18 @@ export default function EntranceExitSection() {
               </tr>
             </thead>
             <tbody>
+              {exitList.length === 0 && (
+                <tr>
+                  <td colSpan={3} className="empty-row">
+                    데이터 없음
+                  </td>
+                </tr>
+              )}
               {exitList.map((e) => (
                 <tr key={e.id}>
                   <td>{e.carNumber}</td>
-                  <td>{e.exitTime}</td>
-                  <td>{e.carState}</td>
+                  <td>{format(e.exitTime)}</td>
+                  <td>출차</td>
                 </tr>
               ))}
             </tbody>
@@ -156,18 +119,22 @@ export default function EntranceExitSection() {
         </div>
       </div>
 
-      {/* ===== 번호판 수정 모달 ===== */}
-      {modalOpen && latest && (
+      {/* ================= 번호판 수정 ================= */}
+      {selected && (
         <LicenseModal
-          imageId={latest.imageId}
-          initialValue={latest.correctedOcrNumber || latest.ocrNumber || ""}
-          onClose={() => setModalOpen(false)}
+          workInfoId={selected.id}
+          initialValue={selected.carNumber}
+          onClose={() => setSelected(null)}
           onUpdated={async () => {
-            setModalOpen(false);
+            setSelected(null);
             await loadAll();
           }}
         />
       )}
     </div>
   );
+}
+
+function format(time) {
+  return time ? new Date(time).toLocaleString() : "-";
 }

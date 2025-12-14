@@ -6,13 +6,16 @@ import com.iot2ndproject.mobilityhub.domain.parking.entity.ParkingEntity;
 import com.iot2ndproject.mobilityhub.domain.parking.repository.ParkingRepository;
 import com.iot2ndproject.mobilityhub.domain.vehicle.entity.UserCarEntity;
 import com.iot2ndproject.mobilityhub.domain.vehicle.repository.UserCarRepository;
+import com.iot2ndproject.mobilityhub.domain.work.dto.EntranceEntryView;
 import com.iot2ndproject.mobilityhub.domain.work.dto.OcrEntryRequest;
 import com.iot2ndproject.mobilityhub.domain.work.entity.WorkInfoEntity;
 import com.iot2ndproject.mobilityhub.domain.work.repository.WorkInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -46,7 +49,7 @@ public class EntryServiceImpl implements EntryService {
         work.setUserCar(car);
         work.setImage(image);
         work.setSectorId(parking);
-        work.setCarState("WAIT");
+
         work.setEntryTime(LocalDateTime.now());
         work.setRequestTime(LocalDateTime.now());
 
@@ -54,5 +57,14 @@ public class EntryServiceImpl implements EntryService {
         workInfoRepository.save(work);
 
         return work;
+    }
+
+    @Override
+    public List<EntranceEntryView> getTodayEntry() {
+        LocalDate today = LocalDate.now();
+        LocalDateTime start = today.atStartOfDay();
+        LocalDateTime end = today.plusDays(1).atStartOfDay();
+
+        return workInfoRepository.findByEntryTimeBetween(start, end);
     }
 }

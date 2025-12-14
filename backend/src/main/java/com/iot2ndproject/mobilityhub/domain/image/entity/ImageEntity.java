@@ -26,6 +26,7 @@ public class ImageEntity {
     private String imagePath; // 이미지 경로
 
     @CreationTimestamp
+    @Column(columnDefinition = "DATETIME")
     private LocalDateTime regDate; // 등록일시
 
     // 🔥 OCR 결과

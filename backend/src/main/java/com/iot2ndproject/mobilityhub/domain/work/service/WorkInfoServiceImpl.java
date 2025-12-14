@@ -4,6 +4,7 @@ import com.iot2ndproject.mobilityhub.domain.vehicle.entity.CarEntity;
 import com.iot2ndproject.mobilityhub.domain.vehicle.entity.UserCarEntity;
 import com.iot2ndproject.mobilityhub.domain.vehicle.repository.CarRepository;
 import com.iot2ndproject.mobilityhub.domain.work.dto.WorkInfoResponseDTO;
+import com.iot2ndproject.mobilityhub.domain.work.dto.EntranceEntryView;
 import com.iot2ndproject.mobilityhub.domain.work.entity.WorkInfoEntity;
 import com.iot2ndproject.mobilityhub.domain.work.repository.WorkInfoRepository;
 import com.iot2ndproject.mobilityhub.domain.work.repository.WorksearchRepository;
@@ -11,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,10 +27,12 @@ public class WorkInfoServiceImpl implements WorkInfoService {
     @Override
     public List<WorkInfoResponseDTO> getTodayEntryDTO() {
         LocalDate today = LocalDate.now();
-        LocalDateTime start = today.atStartOfDay();
-        LocalDateTime end = today.plusDays(1).atStartOfDay();
 
-        return worksearchRepository.findByEntryTimeBetween(start, end)
+        return worksearchRepository
+                .findByEntryTimeBetween(
+                        today.atStartOfDay(),
+                        today.plusDays(1).atStartOfDay()
+                )
                 .stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
@@ -40,10 +42,12 @@ public class WorkInfoServiceImpl implements WorkInfoService {
     @Override
     public List<WorkInfoResponseDTO> getTodayExitDTO() {
         LocalDate today = LocalDate.now();
-        LocalDateTime start = today.atStartOfDay();
-        LocalDateTime end = today.plusDays(1).atStartOfDay();
 
-        return worksearchRepository.findByExitTimeBetween(start, end)
+        return worksearchRepository
+                .findByExitTimeBetween(
+                        today.atStartOfDay(),
+                        today.plusDays(1).atStartOfDay()
+                )
                 .stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
@@ -63,26 +67,19 @@ public class WorkInfoServiceImpl implements WorkInfoService {
         carRepository.save(car);
     }
 
-    // ✔ Entity → DTO 변환
-    private WorkInfoResponseDTO convertToDTO(WorkInfoEntity e) {
+    // 🔥 Projection → DTO 변환
+    private WorkInfoResponseDTO convertToDTO(EntranceEntryView v) {
+
         WorkInfoResponseDTO dto = new WorkInfoResponseDTO();
 
-        dto.setId(e.getId());
-        dto.setCarState(e.getCarState());
-        dto.setEntryTime(e.getEntryTime());
-        dto.setExitTime(e.getExitTime());
-
-        // 차량 정보 (NPE 방지)
-        if (e.getUserCar() != null && e.getUserCar().getCar() != null) {
-            dto.setCarNumber(e.getUserCar().getCar().getCarNumber());
-        }
-
-        // 이미지 정보
-        if (e.getImage() != null) {
-            dto.setImagePath(e.getImage().getImagePath());
-            dto.setCameraId(e.getImage().getCameraId());
-        }
+        dto.setId(v.getId());
+        dto.setEntryTime(v.getEntryTime());
+        dto.setExitTime(v.getExitTime());
+        dto.setCarNumber(v.getUserCar_Car_CarNumber());
+        dto.setImagePath(v.getImage_ImagePath());
+        dto.setCameraId(v.getImage_CameraId());
 
         return dto;
     }
-}
+    }
+

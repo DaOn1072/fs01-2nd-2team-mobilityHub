@@ -34,7 +34,7 @@ public class EntranceServiceImpl implements EntranceService {
         // 2️⃣ 입차 기록 생성
         WorkInfoEntity work = new WorkInfoEntity();
         work.setImage(image);
-        work.setCarState("WAIT");
+
 
         workInfoDAO.save(work);
 
@@ -57,7 +57,7 @@ public class EntranceServiceImpl implements EntranceService {
     @Override
     public void approveEntrance(Long workId) {
         WorkInfoEntity work = workInfoDAO.findById(workId);
-        work.setCarState("APPROVED");
+
         workInfoDAO.save(work);
     }
 
@@ -110,7 +110,7 @@ public class EntranceServiceImpl implements EntranceService {
         dto.setImagePath(image.getImagePath());
         dto.setCameraId(image.getCameraId());
         dto.setTime(image.getRegDate());
-        dto.setCarState(work.getCarState());
+
 
         return dto;
     }
