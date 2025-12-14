@@ -26,6 +26,7 @@ public class ImageEntity {
     private String imagePath; // 이미지 경로
 
     @CreationTimestamp
+    @Column(columnDefinition = "DATETIME")
     private LocalDateTime regDate; // 등록일시
 
     // 카메라에 번호판 촬영되었을 시 사용되는 생성자
