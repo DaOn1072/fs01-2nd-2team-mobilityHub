@@ -1,7 +1,6 @@
 // 백엔드 통신을 위한 path
 
 const request = {
-  // 세차장 api
   carWashing: "/carwash/select",
 
   // 입출구 API 추가
