@@ -34,6 +34,9 @@ public class StockStatusEntity {
 
     @Column(nullable = false)
     private int stockQuantity; // 수량
+    
+    @Column(nullable = false)
+    private int minStockQuantity; // 최소재고
 
     @Column(nullable = false)
     private int stockPrice; // 개당 가격

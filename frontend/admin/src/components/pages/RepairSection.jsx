@@ -16,6 +16,7 @@ const CAR_STATE = {
   REPAIRING: 13,
   WAIT_1: 1,
   WAIT_2: 2,
+  WAIT_3: 0,
 };
 
 // 상태별 정보 매핑
@@ -42,6 +43,7 @@ const RepairSection = () => {
   }, []);
 
   console.log(repairList);
+  console.log(stockList);
 
   // 현재 작업 중인 차량
   const workingCar = repairList.find(
@@ -50,7 +52,10 @@ const RepairSection = () => {
 
   // 대기 중인 차량
   const waitForWark = repairList.find(
-    (repair) => repair.carState !== CAR_STATE.REPAIRING
+    (repair) =>
+      repair.carState !== CAR_STATE.REPAIRING &&
+      repair.entryTime == null &&
+      repair.entryTime == null
   );
 
   const handleCompleteWork = () => {
@@ -106,7 +111,9 @@ const RepairSection = () => {
           <div className="between-position">
             <div>
               <p className="working-info">대기중</p>
-              <p className="info-details insert">(대기 차량 건수)건</p>
+              <p className="info-details insert">
+                {waitForWark ? waitForWark + "건" : "대기 중인 차량 없음"}
+              </p>
             </div>
             <div className="icon-box" style={{ backgroundColor: "#fef9c3" }}>
               {/* icon 들어갈 자리, class=icon color:#ca8a04 */}
@@ -142,14 +149,12 @@ const RepairSection = () => {
             {repairList.map((list) => (
               <div key={list.id} className="list-data">
                 <div>
-                  <div className="car-number">{list.carNumber}</div>
+                  <div className="car-number">{list.car_number}</div>
                   <span className="state"></span>
                 </div>
                 <span className="job-state">
-                  <p
-                    className={CAR_STATE_INFO[list.carStateNodeId]?.color || ""}
-                  >
-                    {CAR_STATE_INFO[list.carStateNodeId]?.label || ""}
+                  <p className={CAR_STATE_INFO[list.carState]?.color || ""}>
+                    {CAR_STATE_INFO[list.carState]?.label || ""}
                   </p>
                 </span>
               </div>
@@ -233,8 +238,15 @@ const RepairSection = () => {
                 </tr>
               </thead>
               <tbody>
-                {/* db에서 재고 가져와야함 */}
-                {/* 참고는 피그마로 만든 tbody부분 확인 */}
+                {stockList.map((res) => (
+                  <tr key={res.inventoryId}>
+                    <td>{res.productName}</td>
+                    <td>{res.stockCategory}</td>
+                    <td>{res.stockQuantity}</td>
+                    <td>{}</td>
+                    <td></td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
