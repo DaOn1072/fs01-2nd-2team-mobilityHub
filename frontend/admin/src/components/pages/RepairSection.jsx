@@ -24,10 +24,11 @@ const CAR_STATE_INFO = {
   [CAR_STATE.WASHING]: { label: "진행중", color: "ing" },
   [CAR_STATE.WAIT_1]: { label: "대기중", color: "wait" },
   [CAR_STATE.WAIT_2]: { label: "대기중", color: "wait" },
+  [CAR_STATE.WAIT_3]: { label: "완료", color: "finish" },
 };
 
 const RepairSection = () => {
-  const [repairList, getReapirList] = useState([]);
+  const [repairList, getRepairList] = useState([]);
   const [stockList, getStockList] = useState([]);
   const [showReportModal, setShowReportModal] = useState(false);
   const [showHistoryModal, setShowHistoryModal] = useState(false);
@@ -36,7 +37,7 @@ const RepairSection = () => {
   useEffect(() => {
     repairPageAllList()
       .then((res) => {
-        getReapirList(res.repairList);
+        getRepairList(res.repairList);
         getStockList(res.stockStatusList);
       })
       .catch((err) => console.error("차량 정보 조회 실패"));
@@ -242,8 +243,14 @@ const RepairSection = () => {
                   <tr key={res.inventoryId}>
                     <td>{res.productName}</td>
                     <td>{res.stockCategory}</td>
-                    <td>{res.stockQuantity}</td>
-                    <td>{}</td>
+                    <td>
+                      {res.stockQuantity}
+                      {res.stockUnits === "EA" ? "개" : "L"}
+                    </td>
+                    <td>
+                      {res.minStockQuantity}
+                      {res.stockUnits === "EA" ? "개" : "L"}
+                    </td>
                     <td></td>
                   </tr>
                 ))}

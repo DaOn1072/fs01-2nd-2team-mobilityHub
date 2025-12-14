@@ -2,7 +2,7 @@ import React from "react";
 import backendServer from "./backendServer";
 import request from "./requests";
 
-export const repairPageAllList = async () => {
+const repairPageAllList = async () => {
   try {
     const response = await backendServer.get(request.repairAll);
 
@@ -12,3 +12,16 @@ export const repairPageAllList = async () => {
     return [];
   }
 };
+
+const reportAllList = async () => {
+  try {
+    const response = await backendServer.get(request.reportList);
+
+    return response.data;
+  } catch (error) {
+    console.error("보고서 리스트 호출도중 에러발생: ", error);
+    return [];
+  }
+};
+
+export { repairPageAllList, reportAllList };

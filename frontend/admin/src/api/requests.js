@@ -11,6 +11,7 @@ const request = {
   // 정비소 api
   // 1) 정비 서비스 차량 모든 조회
   repairAll: "/repair/list",
+  reportList: "repair/report/list",
 };
 
 export default request;
