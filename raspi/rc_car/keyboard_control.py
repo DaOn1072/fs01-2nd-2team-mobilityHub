@@ -180,7 +180,6 @@ def print_help():
 # =========================
 
 if __name__ == "__main__":
-    global pwmA, pwmB
     GPIO.setmode(GPIO.BCM)
     GPIO.setwarnings(False)
     
