@@ -7,13 +7,13 @@ public interface EntranceEntryView {
     Long getId();
 
     LocalDateTime getEntryTime();
+    LocalDateTime getExitTime();
 
-    LocalDateTime getExitTime();   // 🔥 이 줄 추가
-
-    // 연관 엔티티 접근
     String getUserCar_Car_CarNumber();
 
     String getImage_ImagePath();
 
+    // ✅ 수정
     String getImage_CameraId();
 }
+

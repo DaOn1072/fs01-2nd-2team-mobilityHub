@@ -1,166 +1,170 @@
-import "../style/EntranceExitSection.css";
 import { useEffect, useState } from "react";
+import axios from "axios";
 import LicenseModal from "./LicenseModal";
-import { getTodayEntry, getTodayExit, getLatestEntrance } from "../../api/EntranceAPI";
+import "../style/EntranceExitSection.css";
+
+const API_BASE = "http://localhost:9000";
+const PAGE_SIZE = 6;
 
 export default function EntranceExitSection() {
-  const [entryList, setEntryList] = useState([]);
-  const [exitList, setExitList] = useState([]);
   const [latest, setLatest] = useState(null);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [todayEntry, setTodayEntry] = useState([]);
+  const [todayExit, setTodayExit] = useState([]);
 
-  const loadAll = async () => {
-    try {
-      const [entry, exit, latestRes] = await Promise.all([
-        getTodayEntry(),
-        getTodayExit(),
-        getLatestEntrance(),
-      ]);
-      setEntryList(entry);
-      setExitList(exit);
-      setLatest(latestRes);
-    } catch (e) {
-      console.error("입출차 데이터 로딩 실패", e);
-    }
-  };
+  const [entryPage, setEntryPage] = useState(1);
+  const [exitPage, setExitPage] = useState(1);
+
+  const [modalData, setModalData] = useState(null);
 
   useEffect(() => {
     loadAll();
   }, []);
 
+  const loadAll = async () => {
+    const [latestRes, entryRes, exitRes] = await Promise.all([
+      axios.get(`${API_BASE}/entrance/latest`),
+      axios.get(`${API_BASE}/entrance/today/entry`),
+      axios.get(`${API_BASE}/entrance/today/exit`),
+    ]);
+
+    setLatest(latestRes.data);
+    setTodayEntry(entryRes.data);
+    setTodayExit(exitRes.data);
+  };
+
+  const paginate = (list, page) => {
+    const start = (page - 1) * PAGE_SIZE;
+    return list.slice(start, start + PAGE_SIZE);
+  };
+
+  const approve = async (workId) => {
+    await axios.post(`${API_BASE}/entrance/${workId}/approve`);
+    loadAll();
+  };
+
   return (
     <div className="entrance-page">
-      {/* ===== 헤더 ===== */}
-
-      {/* ================= 요약 카드 ================= */}
-      <div className="summary-grid">
-        <div className="summary-card">
-          <p className="summary-title">금일 입차</p>
-          <p className="summary-value">{entryList.length}대</p>
-        </div>
-
-        <div className="summary-card">
-          <p className="summary-title">금일 출차</p>
-          <p className="summary-value">{exitList.length}대</p>
-        </div>
-      </div>
-
-      {/* ===== CCTV + 최근 인식 ===== */}
+      {/* ===== 상단 CCTV + 최근 인식 ===== */}
       <div className="top-grid">
-        {/* CCTV */}
-        <div className="card cctv-card">
-          <h4>입구 CCTV</h4>
-          <div className="cctv-box">
-            <img src="http://192.168.14.124:8080/stream" alt="입구 CCTV" className="cctv-stream" />
-            <div className="cctv-placeholder">카메라 연결 대기중</div>
-          </div>
+        <div className="card cctv-box">
+          <div className="cctv-placeholder">📷 CCTV 스트림 대기중</div>
         </div>
 
-        {/* 최근 인식 번호판 */}
         <div className="card recent-card">
-          <h4>최근 인식 번호판</h4>
+          <h3>최근 인식 번호판</h3>
 
           {!latest ? (
-            <p className="empty-text">아직 인식된 차량 없음</p>
+            <p className="empty-text">대기중</p>
           ) : (
             <>
-              <img src={latest.imagePath} alt="번호판" className="plate-image" />
-
               <p>
-                OCR 번호: <strong>{latest.ocrNumber}</strong>
+                번호판 :{" "}
+                <span
+                  className={latest.match ? "plate-ok" : "plate-error"}
+                  onClick={() => setModalData(latest)}
+                >
+                  {latest.carNumber || latest.ocrNumber || "미확인"}
+                </span>
               </p>
-              <p>
-                수정 번호: <strong>{latest.correctedOcrNumber || "-"}</strong>
-              </p>
-              <p>
-                등록 차량: <strong>{latest.registeredCarNumber || "미등록"}</strong>
-              </p>
+              <p>카메라 : {latest.cameraId}</p>
+              <p>{new Date(latest.time).toLocaleString()}</p>
 
-              {/* 일치 여부 */}
-              <div className="match-row">
-                {latest.match ? (
-                  <span className="badge-match">일치</span>
-                ) : (
-                  <span className="badge-mismatch">불일치</span>
-                )}
-              </div>
-
-              {/* 버튼 */}
-              <div className="action-row">
-                {!latest.match && (
-                  <button className="btn-edit" onClick={() => setModalOpen(true)}>
-                    번호판 수정
-                  </button>
-                )}
-              </div>
+              {!latest.match && latest.workId && (
+                <button className="btn-approve" onClick={() => approve(latest.workId)}>
+                  입차 승인
+                </button>
+              )}
             </>
           )}
         </div>
       </div>
 
-      {/* ===== 입차 / 출차 ===== */}
-      <div className="bottom-grid">
-        <div className="card table-card">
-          <h4>입차 차량 기록</h4>
-          <table>
-            <thead>
-              <tr>
-                <th>차량번호</th>
-                <th>시간</th>
-                <th>상태</th>
-              </tr>
-            </thead>
-            <tbody>
-              {entryList.map((e) => (
-                <tr key={e.id}>
-                  <td>{e.carNumber}</td>
-                  <td>{format(e.entryTime)}</td>
-                  <td>입차</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+      {/* ===== 입차 / 출차 기록 ===== */}
+      <div className="record-grid">
+        {/* 입차 */}
+        <RecordTable
+          title="입차 차량 기록"
+          data={paginate(todayEntry, entryPage)}
+          page={entryPage}
+          total={todayEntry.length}
+          onPageChange={setEntryPage}
+          onClickPlate={setModalData}
+          type="entry"
+        />
 
-        <div className="card table-card">
-          <h4>출차 차량 기록</h4>
-          <table>
-            <thead>
-              <tr>
-                <th>차량번호</th>
-                <th>시간</th>
-                <th>상태</th>
-              </tr>
-            </thead>
-            <tbody>
-              {exitList.map((e) => (
-                <tr key={e.id}>
-                  <td>{e.carNumber}</td>
-                  <td>{format(e.exitTime)}</td>
-                  <td>출차</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        {/* 출차 */}
+        <RecordTable
+          title="출차 차량 기록"
+          data={paginate(todayExit, exitPage)}
+          page={exitPage}
+          total={todayExit.length}
+          onPageChange={setExitPage}
+          type="exit"
+        />
       </div>
 
-      {/* ===== 번호판 수정 모달 ===== */}
-      {modalOpen && latest && (
-        <LicenseModal
-          imageId={latest.imageId}
-          initialValue={latest.correctedOcrNumber || latest.ocrNumber}
-          onClose={() => setModalOpen(false)}
-          onUpdated={async () => {
-            setModalOpen(false);
-            await loadAll();
-          }}
-        />
+      {modalData && (
+        <LicenseModal data={modalData} onClose={() => setModalData(null)} onSuccess={loadAll} />
       )}
     </div>
   );
 }
 
-function format(time) {
-  return time ? new Date(time).toLocaleString() : "-";
+/* ================= 하위 컴포넌트 ================= */
+
+function RecordTable({ title, data, page, total, onPageChange, onClickPlate, type }) {
+  const totalPage = Math.ceil(total / PAGE_SIZE);
+
+  return (
+    <div className="card record-card">
+      <h3>{title}</h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th>번호판</th>
+            <th>시간</th>
+            <th>상태</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.length === 0 ? (
+            <tr>
+              <td colSpan="3" className="empty-row">
+                기록 없음
+              </td>
+            </tr>
+          ) : (
+            data.map((v) => (
+              <tr key={v.id}>
+                <td
+                  className={v.carNumber ? "plate-ok" : "plate-error"}
+                  onClick={() => onClickPlate && onClickPlate(v)}
+                >
+                  {v.carNumber || "미확인"}
+                </td>
+                <td>{new Date(type === "entry" ? v.entryTime : v.exitTime).toLocaleString()}</td>
+                <td>{type === "exit" ? "출차 완료" : v.carNumber ? "정상" : "확인 필요"}</td>
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
+
+      {/* 페이지네이션 */}
+      {totalPage > 1 && (
+        <div className="pagination">
+          <button disabled={page === 1} onClick={() => onPageChange(page - 1)}>
+            ◀
+          </button>
+          <span>
+            {page} / {totalPage}
+          </span>
+          <button disabled={page === totalPage} onClick={() => onPageChange(page + 1)}>
+            ▶
+          </button>
+        </div>
+      )}
+    </div>
+  );
 }
