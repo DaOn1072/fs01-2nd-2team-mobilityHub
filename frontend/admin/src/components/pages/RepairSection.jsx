@@ -40,7 +40,8 @@ const RepairSection = () => {
   const [stockData, setStockData] = useState(null);
   const [reportList, setReportList] = useState([]);
   const [showCreateStockModal, setShowCreateStockModal] = useState(false);
-  const { connectStatus, imageSrc, publish } = useMqtt(BROKER_URL);
+  const { connectStatus, imageSrc, publish, message } = useMqtt(BROKER_URL);
+  const [liftStatus, setLiftStatus] = useState("대기");
 
   const refreshStockList = async () => {
     try {
@@ -92,6 +93,25 @@ const RepairSection = () => {
     if (!repairList) return alert("현재 작업중인 차량이 없습니다.");
     setShowReportModal(true);
   };
+
+  useEffect(() => {
+    if (connectStatus !== "connected") return;
+
+    // lift 토픽 구독
+    publish("parking/web/repair/lift", "status"); // 초기 상태 요청용(선택)
+  }, [connectStatus, publish]);
+
+  useEffect(() => {
+    if (!message) return;
+
+    if (message.topic === "parking/web/repair/lift") {
+      if (message.payload === "up") {
+        setLiftStatus("상승중");
+      } else if (message.payload === "down") {
+        setLiftStatus("하강중");
+      }
+    }
+  }, [message]);
 
   const handleReportSubmit = async (reportData) => {
     console.log("DB에 저장될 데이터: ", reportData);
@@ -185,10 +205,18 @@ const RepairSection = () => {
           <div className="between-position">
             <div>
               <p className="working-info">리프트 상태</p>
-              <p className="info-details insert">(리프트상태)</p>
+              <p className="info-details insert">{liftStatus}</p>
             </div>
             <div className="icon-box" style={{ backgroundColor: "#fee2e2" }}>
               {/* icon 들어갈 자리, class=icon color:#dc2626 */}
+              <div className="lift-btn-wrapper">
+                <button className="lift-btn up" onClick={() => publish("parking/web/repair/lift", "up")}>
+                  ▲
+                </button>
+                <button className="lift-btn down" onClick={() => publish("parking/web/repair/lift", "down")}>
+                  ▼
+                </button>
+              </div>
             </div>
           </div>
         </div>
