@@ -4,7 +4,7 @@ import { getWeatherInfo } from "../../api/weather";
 import { useLocation } from "react-router-dom";
 import { getTodayEntry, getTodayExit } from "../../api/EntranceAPI";
 import InOutLineChart from "../chart/InOutLineChart";
-import { getWorkInfoList } from "../../api/workInfoAPI";
+import { getTodayWorkList, getWorkInfoList } from "../../api/workInfoAPI";
 import UseByArea from "../chart/UseByArea";
 
 const MainSection = () => {
@@ -74,7 +74,7 @@ const MainSection = () => {
 
   // 구역별 이용 차트 데이터
   useEffect(() => {
-    getWorkInfoList()
+    getTodayWorkList()
       .then((res) => {
         setWorkList(res);
       })
@@ -89,13 +89,13 @@ const MainSection = () => {
       <div className="statistics-chart">
         <div className="chart-box">
           <div className="chart-title">
-            <h3>금일 집계 (시간대별 입출차)</h3>
+            <h3>금일 시간대별 입출차 집계</h3>
           </div>
           <InOutLineChart className="chart-content" data={inOutData} />
         </div>
         <div className="chart-box">
           <div className="chart-title">
-            <h3>금일 이용회원 (구역별)</h3>
+            <h3>금일 서비스별 이용현황</h3>
           </div>
           <UseByArea className="chart-content" workList={workList} />
         </div>

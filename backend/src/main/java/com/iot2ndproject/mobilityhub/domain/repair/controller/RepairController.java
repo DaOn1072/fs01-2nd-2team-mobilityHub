@@ -105,6 +105,12 @@ public class RepairController {
         return ResponseEntity.ok(reportId+"아이디를 가진 보고서가 삭제되었습니다.");
     }
 
+    // 정비 금액 조회
+    @GetMapping("/report/amount")
+    public List<ReportResponseDTO> repairAmount(){
+        return repairService.repairAmount();
+    }
+
     /**
      * 정비 작업 완료 처리
      * @param workInfoId 작업 정보 ID

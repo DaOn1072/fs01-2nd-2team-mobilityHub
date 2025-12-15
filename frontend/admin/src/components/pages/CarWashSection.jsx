@@ -113,7 +113,7 @@ const CarWashSection = () => {
       {/* CCTV와 이용 현황 */}
       <div className="wash-components">
         <div className="wash-cctv">
-          <img src={imageSrc || ""} alt="camera" className="cctv-view" />
+          <img src={imageSrc || " "} alt="camera" className="cctv-view" />
         </div>
         <div className="wash-car-list">
           <div className="list-title">

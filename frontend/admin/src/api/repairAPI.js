@@ -37,10 +37,7 @@ const createStock = async (stockData) => {
 
 const updateStock = async (updateStockData) => {
   try {
-    const response = await backendServer.post(
-      request.updateStock,
-      updateStockData
-    );
+    const response = await backendServer.post(request.updateStock, updateStockData);
     return response;
   } catch (error) {
     console.error("에러발생: ", error);
@@ -60,10 +57,14 @@ const deleteStock = async (inventoryId) => {
   }
 };
 
-export {
-  repairPageAllList,
-  reportAllList,
-  updateStock,
-  deleteStock,
-  createStock,
+// 월별 금액
+const getRepairAmount = async () => {
+  try {
+    const response = await backendServer.get(`${request.repairAmount}`);
+    return response;
+  } catch (error) {
+    console.error("월별금액을 조회 중 에러가 발생: ", error);
+  }
 };
+
+export { repairPageAllList, reportAllList, updateStock, deleteStock, createStock, getRepairAmount };

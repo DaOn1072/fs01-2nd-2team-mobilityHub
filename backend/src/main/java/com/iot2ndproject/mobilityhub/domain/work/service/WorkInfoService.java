@@ -17,4 +17,7 @@ public interface WorkInfoService {
 
     // 작업 전체 목록 보기
     List<WorkInfoResponseDTO> findAll();
+
+    // 오늘 작업 목록만 가져오기
+    List<WorkInfoResponseDTO> findAllToday();
 }
