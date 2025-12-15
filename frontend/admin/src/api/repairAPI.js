@@ -68,4 +68,14 @@ const writeReport = async (reportData) => {
   }
 };
 
-export { repairPageAllList, reportAllList, updateStock, deleteStock, createStock, writeReport };
+// 월별 금액
+const getRepairAmount = async () => {
+  try {
+    const response = await backendServer.get(`${request.repairAmount}`);
+    return response;
+  } catch (error) {
+    console.error("월별금액을 조회 중 에러가 발생: ", error);
+  }
+};
+
+export { repairPageAllList, reportAllList, updateStock, deleteStock, createStock, getRepairAmount, writeReport };

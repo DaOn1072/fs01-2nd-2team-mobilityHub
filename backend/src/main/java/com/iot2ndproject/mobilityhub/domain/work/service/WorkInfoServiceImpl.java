@@ -72,6 +72,8 @@ public class WorkInfoServiceImpl implements WorkInfoService {
         carRepository.save(car);
     }
 
+
+    // 모든 작업 목록 가져오기
     @Override
     public List<WorkInfoResponseDTO> findAll() {
         System.out.println("작업목록 service");
@@ -84,6 +86,30 @@ public class WorkInfoServiceImpl implements WorkInfoService {
                     dto.setWorkType(entity.getWork().getWorkType());
                     dto.setEntryTime(entity.getRequestTime());
                     dto.setExitTime(entity.getExitTime());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
+
+    // 오늘 작업목록 전체 불러오기
+    @Override
+    public List<WorkInfoResponseDTO> findAllToday() {
+        System.out.println("오늘작업목록 조회 service");
+
+        LocalDate today = LocalDate.now();
+
+        return dao.findAllToday()
+                .stream()
+                .filter(w -> {
+                    LocalDate entryDate = w.getRequestTime().toLocalDate();
+                    return entryDate.equals(today);
+                })
+                .map(w -> {
+                    WorkInfoResponseDTO dto = new WorkInfoResponseDTO();
+                    dto.setWorkId(w.getWork().getWorkId());
+                    dto.setWorkType(w.getWork().getWorkType());
+                    dto.setEntryTime(w.getEntryTime());
+                    dto.setExitTime(w.getExitTime());
                     return dto;
                 })
                 .collect(Collectors.toList());

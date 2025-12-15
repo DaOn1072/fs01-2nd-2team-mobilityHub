@@ -9,8 +9,12 @@ const request = {
 
   // 작업 전체 목록
   workList: "/entrance/work/list",
+  todayWork: "/entrance/work/today",
 
   // 정비소 api
+  // 정비소 월별 금액
+  repairAmount: "/repair/report/amount",
+
   // 1) 정비 서비스 차량 모든 조회
   repairAll: "/repair/list",
   reportList: "/repair/report/list",
