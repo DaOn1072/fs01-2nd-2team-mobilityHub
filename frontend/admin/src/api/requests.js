@@ -27,6 +27,7 @@ const request = {
   sendRepairComplete: "/repair/complete",
   // 통계
   repairAmount: "/repair/report/amount",
+  newMembership: "/user/userlist",
 
   // 관리자 조회
   adminList: "/admin/list",
