@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserCarRepository extends JpaRepository<UserCarEntity,Long> {
+
+    UserCarEntity findById(long id);
+
     List<UserCarEntity> findByUser_UserId(String userId);
 
     java.util.Optional<UserCarEntity> findByUser_UserIdAndCar_CarNumber(String userId, String carNumber);
