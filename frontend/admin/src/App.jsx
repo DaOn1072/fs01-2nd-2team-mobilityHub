@@ -14,6 +14,7 @@ import RepairSection from "./components/pages/RepairSection";
 import AdminSection from "./components/pages/AdminSection";
 import ParkingSection from "./components/pages/ParkingSection";
 import AdminLogin from "./components/pages/AdminLogin";
+import { ReviewSection } from "./components/pages/ReviewSection";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
               <Route path="/statistics" element={<LicenseModal />} />
               <Route path="/admin" element={<AdminSection />} />
               <Route path="/repair" element={<RepairSection />} />
+              <Route path="/reviews" element={<ReviewSection />} />
               <Route path="/parking" element={<ParkingSection />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>

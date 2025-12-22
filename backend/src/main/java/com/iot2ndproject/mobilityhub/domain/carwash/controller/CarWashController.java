@@ -17,10 +17,6 @@ public class CarWashController {
     private final CarWashService carWashService;
     private final ServiceRequestService serviceRequestService;
 
-//    @GetMapping("/select")
-//    public List<WashResponse> washing(@RequestParam("workId")int workId){
-//        return  carWashService.findByWokrId(workId);
-//    }
 
     @GetMapping("/select")
     public List<WashResponse> washing(){

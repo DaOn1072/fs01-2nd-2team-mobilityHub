@@ -12,6 +12,7 @@ const Header = () => {
     "/parking": "주차장 관리",
     "/admin": "관리자",
     "/repair": "정비소",
+    "/reviews": "리뷰",
     "/statistics": "통계",
   };
 

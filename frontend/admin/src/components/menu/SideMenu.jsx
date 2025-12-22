@@ -59,6 +59,9 @@ const SideMenu = () => {
             <BarChart3 />
             통계
           </Link>
+          <Link to="/reviews" className={getClassName("/reviews")}>
+            리뷰
+          </Link>
           <Link to="/admin" className={getClassName("/admin")}>
             <Users />
             관리자 조회
