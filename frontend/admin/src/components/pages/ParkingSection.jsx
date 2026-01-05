@@ -6,10 +6,9 @@ import "../../App.css";
 import { workInfoTotalList } from "../../api/workInfoAPI";
 import useMqtt from "../hook/useMqtt";
 
-const BROKER_URL = "ws://192.168.14.45:9001";
 export default function ParkingSection() {
   const [workTotalList, setWorkTotalList] = useState([]);
-  const { connectStatus, imageSrc, publish } = useMqtt(BROKER_URL);
+  const { connectStatus, imageSrc, publish } = useMqtt();
 
   useEffect(() => {
     if (connectStatus === "connected") {
@@ -135,7 +134,8 @@ export default function ParkingSection() {
                 spot.status === "사용가능"
                   ? "border-green-500 bg-green-50"
                   : "border-red-500 bg-red-50"
-              }`}>
+              }`}
+            >
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
                   <Car
@@ -144,7 +144,8 @@ export default function ParkingSection() {
                     }`}
                   />
                   <span
-                    className={`${spot.status === "사용가능" ? "text-green-900" : "text-red-900"}`}>
+                    className={`${spot.status === "사용가능" ? "text-green-900" : "text-red-900"}`}
+                  >
                     {spot.spotNumber}번 주차면
                   </span>
                 </div>
@@ -154,7 +155,8 @@ export default function ParkingSection() {
                     spot.status === "사용가능"
                       ? "bg-green-200 text-green-800"
                       : "bg-red-200 text-red-800"
-                  }`}>
+                  }`}
+                >
                   {spot.status}
                 </span>
               </div>
