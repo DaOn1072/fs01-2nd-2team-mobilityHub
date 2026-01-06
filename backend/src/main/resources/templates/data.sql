@@ -1,15 +1,16 @@
 -- Full seed data (idempotent) derived from Dump20251213.sql
 
-INSERT INTO `admin` (`admin_id`, `admin_name`, `admin_pass`, `email`, `phone`) VALUES
-  ('Padmin','Parking Manager','1234','tadmin@test.com','010-1111-1111'),
-  ('Radmin','Repair Manager','1234','radmin@test.com','010-3333-3333'),
-  ('Tadmin','Super Manager','1234','sadmin@test.com','010-4444-4444'),
-  ('Wadmin','Wash Manager','1234','wadmin@test.com','010-2222-2222')
+INSERT INTO `admin` (`admin_id`, `admin_name`, `admin_pass`, `email`, `phone`, `role`) VALUES
+  ('Padmin','Parking Manager','1234','tadmin@test.com','010-1111-1111','ROLE_ADMIN'),
+  ('Radmin','Repair Manager','1234','radmin@test.com','010-3333-3333','ROLE_ADMIN'),
+  ('Tadmin','Super Manager','1234','sadmin@test.com','010-4444-4444','ROLE_ADMIN'),
+  ('Wadmin','Wash Manager','1234','wadmin@test.com','010-2222-2222','ROLE_ADMIN')
 ON DUPLICATE KEY UPDATE
   `admin_name` = VALUES(`admin_name`),
   `admin_pass` = VALUES(`admin_pass`),
   `email` = VALUES(`email`),
-  `phone` = VALUES(`phone`);
+  `phone` = VALUES(`phone`),
+  `role` = VALUES(`role`);
 
 INSERT INTO `car` (`car_id`, `insert_date`, `car_model`, `car_number`) VALUES
   (1,'2025-12-13 10:24:48','Hyundai Sonata','12가1111'),

@@ -8,6 +8,8 @@ import com.iot2ndproject.mobilityhub.domain.service_request.entity.ParkingMapNod
 import com.iot2ndproject.mobilityhub.domain.service_request.repository.ParkingMapNodeRepository;
 import com.iot2ndproject.mobilityhub.domain.service_request.entity.WorkInfoEntity;
 import com.iot2ndproject.mobilityhub.domain.service_request.repository.WorkInfoRepository;
+import com.iot2ndproject.mobilityhub.domain.service_request.service.ServiceRequestService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.mqtt.support.MqttHeaders;
@@ -28,6 +30,7 @@ public class MqttService {
     private final MyPublisher mqttPublisher;
     private final ObjectMapper objectMapper;
     private final ImageRepository imageRepository;
+    private final ServiceRequestService requestService;
 
     @ServiceActivator(inputChannel = "mqttInputChannel")
     public void handleMessage(Message<String> message) {
@@ -53,7 +56,9 @@ public class MqttService {
             System.out.println(payload);
             return;
         }
-
+        if ("parking/web/carwash".equals(topic)){
+            
+        }
     }
 
     /**
