@@ -29,7 +29,7 @@ class MyCamera:
         
         # 상하좌우를 반전시킬 수 있도록 작업 - start 이후설정
         device.hflip = True 
-        device.vflip = False 
+        device.vflip = True 
         
         time.sleep(1)
         

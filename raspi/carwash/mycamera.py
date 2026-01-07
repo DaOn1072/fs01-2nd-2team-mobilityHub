@@ -1,26 +1,40 @@
 import threading 
 import time 
 import io
-import base64
+import base64 
 from picamera2 import Picamera2
 
 class MyCamera:
     frame = None 
     thread = None 
+    # 외부에서 frame을 요청하기 위해서 호출되는 메소드
+    # => 스레드로 스트리밍되는 frame을 외부로 보내는 역할
     def getStreaming(self):
+        # 호출될때마다 쓰레드객체를 생성하지 않고 처음에 한 번만 쓰레드를 만들기 위한 작업
         if MyCamera.thread is None:
             MyCamera.thread = threading.Thread(target=self.streaming)
             MyCamera.thread.start() 
             
+            #frame에 이미지가 저장되지 않으면 다음으로 넘어갈 수 없도록 작업() 
+            #스레드를 start하면 바로 실행이 되는데 사진이 안 찍힌 상태에서 (카메라 초기화 작업) 리턴되는 것을
+            #막기 위해서 작업
+            
             while MyCamera.frame is None:
-                time.sleep(0.01) 
+                time.sleep(0.01) # 프레임이 None상태면 넘어가지 못하도록 딜레이 
                 
         return MyCamera.frame
     
+    # 스레드에서 실행될 메소드
+    # static 메소드개념 매개변수로 클래스자신의 정보를 받는다. cls로 받는다.
     @classmethod 
     def streaming(cls):
-
+        #print("start....")
+        # 1. 카메라셋팅하고 촬영 
         device = Picamera2() 
+        
+        # 빠르게 연속으로 이미지를 만들어내야 하기 때문에 카메라를 매번 초기화시키지 않고
+        # 이미 워밍업이 되어 있는 상태에서 작업을 하기 위해 create_video_configuration으로 작업
+        # 센서를 켜놓고 카메라로 촬영하기 위해서 필요한 값들을 유지시켜놓고 작업하기 위해
         config = device.create_video_configuration(main={"format":"RGB888", "size":(320, 240)})
         
         device.configure(config)
@@ -28,8 +42,10 @@ class MyCamera:
         device.start()
         
         # 상하좌우를 반전시킬 수 있도록 작업 - start 이후설정
-        device.hflip = True 
-        device.vflip = False 
+        
+        
+        device.hflip = False 
+        device.vflip = True 
         
         time.sleep(1)
         
