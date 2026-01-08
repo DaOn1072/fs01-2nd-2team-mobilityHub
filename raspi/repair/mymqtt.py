@@ -32,7 +32,6 @@ class MqttWorker:
         while self.is_streaming:
             try:
                 frame = self.camera.getStreaming()
-                # 프레임을 MQTT 브로커로 퍼블리시
                 publisher.single("parking/web/repair/cam/frame", frame, hostname="192.168.14.69")# 작업하는 사람 브로커 주소 넣기
                 
             except Exception as e:
